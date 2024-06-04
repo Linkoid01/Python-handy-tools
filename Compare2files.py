@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # title             Compare2files.py
-# description:      Use this script to search through 2 text files for duplicate entries
+# description:      Use this script to search through 2 text files for duplicate entries such as email address lists
 # author:           Silviu Siladi
 # date              2024-05-31
 # usage             Remember to adjust file1/2.txt
