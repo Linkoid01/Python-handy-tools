@@ -1,0 +1,39 @@
+#Match list to CSV line and copy to new file
+
+import csv
+
+def find_in_csv(item_list_file, csv_file, output_file):
+  """
+  Searches for items in a CSV file based on a list and writes matches to a new CSV.
+
+  Args:
+      item_list_file: Path to the file containing the list of items (one per line).
+      csv_file: Path to the CSV file to search.
+      output_file: Path to the new CSV file containing matched lines.
+  """
+  # Open files
+  with open(item_list_file, 'r') as items_file, open(csv_file, 'r') as csvfile, open(output_file, 'w', newline='') as outfile:
+    # Read items list
+    items = [line.strip() for line in items_file.readlines()]
+
+    # Create CSV reader and writer objects
+    csv_reader = csv.reader(csvfile)
+    csv_writer = csv.writer(outfile)
+
+    # Write header row from CSV if it exists
+    headers = next(csv_reader)
+    csv_writer.writerow(headers)
+
+    # Loop through CSV rows searching for matches
+    for row in csv_reader:
+      if any(item in row for item in items):
+        csv_writer.writerow(row)
+
+# Replace with your actual file paths
+item_list_file = "items.txt"
+csv_file = "data.csv"
+output_file = "matched_data.csv"
+
+find_in_csv(item_list_file, csv_file, output_file)
+
+print(f"Finished! Matched lines written to {output_file}")
