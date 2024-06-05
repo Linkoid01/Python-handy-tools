@@ -1,4 +1,9 @@
-#Match list to CSV line and copy to new file
+#!/usr/bin/env python3
+# title             CopyLineCSV.py
+# description:      Use this script to match list to CSV line and copy to new file
+# author:           Silviu Siladi
+# date              2024-06-05
+# usage             Remember to adjust items.txt data.csv matched_data.csv
 
 import csv
 
