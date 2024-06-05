@@ -1,0 +1,43 @@
+import csv
+
+def find_in_csv(item_list_file, csv_file, matched_file, unmatched_file):
+  """
+  Searches for items in a CSV file based on a list and writes results to separate files.
+
+  Args:
+      item_list_file: Path to the file containing the list of items (one per line).
+      csv_file: Path to the CSV file to search.
+      matched_file: Path to the new CSV file containing matched lines.
+      unmatched_file: Path to the new CSV file containing unmatched lines.
+  """
+  # Open files
+  with open(item_list_file, 'r') as items_file, open(csv_file, 'r') as csvfile, open(matched_file, 'w', newline='') as matched_outfile, open(unmatched_file, 'w', newline='') as unmatched_outfile:
+    # Read items list
+    items = [line.strip() for line in items_file.readlines()]
+
+    # Create CSV reader and writer objects
+    csv_reader = csv.reader(csvfile)
+    matched_writer = csv.writer(matched_outfile)
+    unmatched_writer = csv.writer(unmatched_outfile)
+
+    # Write header row from CSV if it exists
+    headers = next(csv_reader)
+    matched_writer.writerow(headers)
+    unmatched_writer.writerow(headers)
+
+    # Loop through CSV rows searching for matches
+    for row in csv_reader:
+      if any(item in row for item in items):
+        matched_writer.writerow(row)
+      else:
+        unmatched_writer.writerow(row)
+
+# Replace with your actual file paths
+item_list_file = "items.txt"
+csv_file = "data.csv"
+matched_file = "matched_data.csv"
+unmatched_file = "unmatched_data.csv"
+
+find_in_csv(item_list_file, csv_file, matched_file, unmatched_file)
+
+print(f"Finished! Matched lines written to {matched_file}, unmatched to {unmatched_file}")
