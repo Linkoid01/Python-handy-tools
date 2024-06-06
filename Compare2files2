@@ -1,0 +1,26 @@
+def read_users_from_file(filename):
+    with open(filename, 'r') as file:
+        users = file.read().splitlines()
+    return [user.lower() for user in users]
+
+def find_duplicates(list1, list2):
+    set1 = set(list1)
+    set2 = set(list2)
+    duplicates = set1.intersection(set2)
+    return duplicates
+
+def main():
+    list1 = read_users_from_file('list1.txt')
+    list2 = read_users_from_file('list2.txt')
+    
+    duplicates = find_duplicates(list1, list2)
+    
+    if duplicates:
+        print("Duplicate users found:")
+        for user in duplicates:
+            print(user)
+    else:
+        print("No duplicate users found.")
+
+if __name__ == "__main__":
+    main()
