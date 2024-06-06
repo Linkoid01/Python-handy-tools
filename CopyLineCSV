@@ -3,7 +3,8 @@
 # description:      Use this script to match list to CSV line and copy to new file
 # author:           Silviu Siladi
 # date              2024-06-05
-# usage             Remember to adjust items.txt data.csv matched_data.csv
+# usage             Remember to adjust items.txt data.csv matched_data.csv unmatched_items.txt
+# history           V1.1  Combined both functions (Match and unmatched lines) in one file
 
 import csv
 
@@ -34,11 +35,42 @@ def find_in_csv(item_list_file, csv_file, output_file):
       if any(item in row for item in items):
         csv_writer.writerow(row)
 
+def find_unmatched_items(item_list_file, csv_file, unmatched_items_file):
+  """
+  Searches for items in a CSV and writes unmatched items from the list to a new file.
+
+  Args:
+      item_list_file: Path to the file containing the list of items (one per line).
+      csv_file: Path to the CSV file to search.
+      unmatched_items_file: Path to the new file containing unmatched items.
+  """
+  # Open files
+  with open(item_list_file, 'r') as items_file, open(csv_file, 'r') as csvfile, open(unmatched_items_file, 'w') as unmatched_outfile:
+    # Read items list
+    items = {line.strip() for line in items_file.readlines()}
+
+    # Create CSV reader
+    csv_reader = csv.reader(csvfile)
+
+    # Loop through CSV rows, keeping track of unmatched items
+    unmatched_items = set(items)
+    for row in csv_reader:
+      # Update unmatched items based on presence in the row (any match removes the item)
+      unmatched_items -= set(item for item in row if item in items)  # More concise set comprehension
+
+    # Write unmatched items to file
+    for item in unmatched_items:
+      unmatched_outfile.write(item + "\n")
+
+
 # Replace with your actual file paths
 item_list_file = "items.txt"
 csv_file = "data.csv"
 output_file = "matched_data.csv"
+unmatched_items_file = "unmatched_items.txt"
 
 find_in_csv(item_list_file, csv_file, output_file)
+find_unmatched_items(item_list_file, csv_file, unmatched_items_file)
 
 print(f"Finished! Matched lines written to {output_file}")
+print(f"Finished! Unmatched items written to {unmatched_items_file}")
