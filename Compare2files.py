@@ -4,11 +4,12 @@
 # author:           Silviu Siladi
 # date              2024-05-31
 # usage             Remember to adjust file1/2.txt
+# history           6/14/2024 case insensitive search
 
 def read_users_from_file(filename):
     with open(filename, 'r') as file:
         users = file.read().splitlines()
-    return users
+    return [user.lower() for user in users]
 
 def find_duplicates(list1, list2):
     set1 = set(list1)
@@ -17,8 +18,8 @@ def find_duplicates(list1, list2):
     return duplicates
 
 def main():
-    list1 = read_users_from_file('file1.txt')
-    list2 = read_users_from_file('file2.txt')
+    list1 = read_users_from_file('vml.txt')
+    list2 = read_users_from_file('wt.txt')
     
     duplicates = find_duplicates(list1, list2)
     
