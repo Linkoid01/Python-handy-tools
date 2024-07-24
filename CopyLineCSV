@@ -3,37 +3,40 @@
 # description:      Use this script to match list to CSV line and copy to new file
 # author:           Silviu Siladi
 # date              2024-06-05
-# usage             Remember to adjust items.txt data.csv matched_data.csv unmatched_items.txt
+# usage             Remember to adjust items.txt data.csv matched_data.csv
 # history           V1.1  Combined both functions (Match and unmatched lines) in one file
+#                   2024-07-24  case-insensitive search for find_in_csv
 
 import csv
 
 def find_in_csv(item_list_file, csv_file, output_file):
-  """
-  Searches for items in a CSV file based on a list and writes matches to a new CSV.
+    """
+    Searches for items in a CSV file based on a list and writes matches to a new CSV.
 
-  Args:
-      item_list_file: Path to the file containing the list of items (one per line).
-      csv_file: Path to the CSV file to search.
-      output_file: Path to the new CSV file containing matched lines.
-  """
-  # Open files
-  with open(item_list_file, 'r') as items_file, open(csv_file, 'r') as csvfile, open(output_file, 'w', newline='') as outfile:
-    # Read items list
-    items = [line.strip() for line in items_file.readlines()]
+    Args:
+        item_list_file: Path to the file containing the list of items (one per line).
+        csv_file: Path to the CSV file to search.
+        output_file: Path to the new CSV file containing matched lines.
+    """
+    # Open files
+    with open(item_list_file, 'r') as items_file, open(csv_file, 'r') as csvfile, open(output_file, 'w', newline='') as outfile:
+        # Read items list and convert to lowercase
+        items = [line.strip().lower() for line in items_file.readlines()]
 
-    # Create CSV reader and writer objects
-    csv_reader = csv.reader(csvfile)
-    csv_writer = csv.writer(outfile)
+        # Create CSV reader and writer objects
+        csv_reader = csv.reader(csvfile)
+        csv_writer = csv.writer(outfile)
 
-    # Write header row from CSV if it exists
-    headers = next(csv_reader)
-    csv_writer.writerow(headers)
-
-    # Loop through CSV rows searching for matches
-    for row in csv_reader:
-      if any(item in row for item in items):
-        csv_writer.writerow(row)
+        # Write header row from CSV if it exists
+        headers = next(csv_reader)
+        csv_writer.writerow(headers)
+        
+        # Loop through CSV rows searching for matches
+        for row in csv_reader:
+            # Convert each element in the row to lowercase and check for partial matches
+            row_lower = [cell.lower() for cell in row]
+            if any(any(item in cell for cell in row_lower) for item in items):
+                csv_writer.writerow(row)
 
 def find_unmatched_items(item_list_file, csv_file, unmatched_items_file):
   """
